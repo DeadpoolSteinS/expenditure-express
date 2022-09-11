@@ -4,7 +4,12 @@ const { Expenditure } = require("../models/expenditure");
 
 expenditureRouter.get("/api/expenditures/", async (req, res) => {
   try {
-    const expenditure = await Expenditure.find({});
+    let createdAt = req.body.date ?? formatDate(new Date());
+
+    const expenditure = await Expenditure.find({
+      createdAt: { $regex: ".*" + createdAt },
+    }).exec();
+
     res.json(expenditure);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -13,11 +18,12 @@ expenditureRouter.get("/api/expenditures/", async (req, res) => {
 
 expenditureRouter.post("/api/add-expenditure", async (req, res) => {
   try {
-    const { name, category, price } = req.body;
+    const { name, category, price, createdAt } = req.body;
     let expenditure = new Expenditure({
       name,
       price,
       category,
+      createdAt,
     });
     expenditure = await expenditure.save();
     res.json(expenditure);
@@ -88,5 +94,16 @@ expenditureRouter.post("/api/add-expenditure", async (req, res) => {
 //     res.status(500).json({ error: e.message });
 //   }
 // });
+
+function formatDate(today) {
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = "0" + dd;
+  if (mm < 10) mm = "0" + mm;
+
+  return dd + "-" + mm + "-" + yyyy;
+}
 
 module.exports = expenditureRouter;
