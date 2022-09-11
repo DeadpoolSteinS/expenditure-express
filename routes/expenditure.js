@@ -13,12 +13,11 @@ expenditureRouter.get("/api/expenditures/", async (req, res) => {
 
 expenditureRouter.post("/api/add-expenditure", async (req, res) => {
   try {
-    const { name, category, price, created_at } = req.body;
+    const { name, category, price } = req.body;
     let expenditure = new Expenditure({
       name,
       price,
       category,
-      created_at,
     });
     expenditure = await expenditure.save();
     res.json(expenditure);
