@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const expenditureRouter = require("./routes/expenditure");
 
@@ -7,6 +8,7 @@ const port = process.env.PORT || 3000;
 const db =
   "mongodb+srv://steins:steins@cluster0.ajqocff.mongodb.net/?retryWrites=true&w=majority";
 
+app.use(cors());
 app.use(express.json());
 app.use(expenditureRouter);
 
