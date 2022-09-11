@@ -4,7 +4,8 @@ const { Expenditure } = require("../models/expenditure");
 
 expenditureRouter.get("/api/expenditures/", async (req, res) => {
   try {
-    let createdAt = req.body.date ?? formatDate(new Date());
+    let createdAt = req.query.date ?? formatDate(new Date());
+    console.log(createdAt);
 
     const expenditure = await Expenditure.find({
       createdAt: { $regex: ".*" + createdAt },
